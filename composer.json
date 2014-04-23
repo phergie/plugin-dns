@@ -1,0 +1,27 @@
+{
+    "name": "wyrihaximus/phergie-dns",
+    "description": "Phergie plugin for Looking up IP&#039;s by hostnames",
+    "keywords": [ "irc", "bot", "react", "plugin" ],
+    "license": "MIT",
+    "support": {
+        "email": "team@phergie.org",
+        "irc": "irc://irc.freenode.net/phergie",
+        "issues": "https://github.com/wyrihaximus/PhergieDns/issues",
+        "source": "https://github.com/wyrihaximus/PhergieDns"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "phergie/phergie-irc-bot-react": "dev-master",
+        "phergie/phergie-irc-plugin-react-command": "1.0.*",
+        "react/dns": "0.3.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*",
+        "phake/phake": "1.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "WyriHaximus\\Phergie\\Plugin\\Dns\\": "src"
+        }
+    }
+}
