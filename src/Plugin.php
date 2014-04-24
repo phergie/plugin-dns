@@ -64,9 +64,10 @@ class Plugin extends AbstractPlugin
         foreach ($event->getCustomParams() as $hostname) {
             $message = $hostname . ': ';
             $this->logger->debug('Looking up: ' . $hostname);
-            $this->getResolver()->resolve($hostname)->then(function ($ip) use ($event, $queue, $message) {
+            $logger = $this->logger;
+            $this->getResolver()->resolve($hostname)->then(function ($ip) use ($event, $queue, $message, $logger) {
                 $message = $message . $ip;
-                $this->logger->debug($message);
+                $logger->debug($message);
                 foreach ($event->getTargets() as $target) {
                     $queue->ircPrivmsg($target, $message);
                 }
