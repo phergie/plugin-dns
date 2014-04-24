@@ -79,12 +79,15 @@ class Plugin extends AbstractPlugin
         }
     }
 
-    public function getResolver() {
+    public function getResolver(Factory $factory = null) {
         if ($this->resolver instanceof Resolver) {
             return $this->resolver;
         }
 
-        $factory = new Factory();
+        if ($factory === null) {
+            $factory = new Factory();
+        }
+
         $this->resolver = $factory->createCached($this->dnsServer, $this->loop);
 
         return $this->resolver;

@@ -10,10 +10,6 @@
 
 namespace WyriHaximus\Phergie\Plugin\Dns;
 
-use Phake;
-use Phergie\Irc\Event\EventInterface;
-use Phergie\Irc\Bot\React\EventQueueInterface;
-
 /**
  * Tests for the Plugin class.
  *
@@ -45,10 +41,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         ), $subscribedEvents);
     }
 
-    /**
-     * Tests that getSubscribedEvents() returns an array.
-     */
-    public function _testHandleDnsCommand()
+    public function testHandleDnsCommand()
     {
         $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
             'resolve',
@@ -56,12 +49,128 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             '8.8.8.8:53',
             $this->getMock('React\Dns\Query\ExecutorInterface'),
         ));
+        $deferred = new \React\Promise\Deferred();
+        $resolver->expects($this->once())
+            ->method('resolve')
+            ->with('wyrihaximus.net')
+            ->willReturn($deferred->promise());
 
         $plugin = new Plugin(array(
             'resolver' => $resolver,
         ));
-        $event = $this->getMock('Phergie\Irc\Plugin\React\Command\CommandEvent');
-        $queue = $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface');
+
+        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $plugin->setLogger($logger);
+
+        $event = $this->getMock('Phergie\Irc\Plugin\React\Command\CommandEvent', array(
+            'getCustomParams',
+            'getTargets',
+        ));
+        $event->expects($this->once())
+            ->method('getCustomParams')
+            ->with()
+            ->willReturn(array(
+                'wyrihaximus.net',
+            ));
+        $event->expects($this->once())
+            ->method('getTargets')
+            ->with()
+            ->willReturn(array(
+                'WyriHaximus',
+            ));
+
+        $queue = $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface', array(
+            'ircPrivmsg',
+            'extract',
+            'setPrefix',
+            'ircPass',
+            'ircNick',
+            'ircUser',
+            'ircServer',
+            'ircOper',
+            'ircQuit',
+            'ircJoin',
+            'ircPart',
+            'ircMode',
+            'ircSquit',
+            'ircTopic',
+            'ircNames',
+            'ircList',
+            'ircInvite',
+            'ircKick',
+            'ircVersion',
+            'ircStats',
+            'ircLinks',
+            'ircTime',
+            'ircConnect',
+            'ircTrace',
+            'ircAdmin',
+            'ircInfo',
+            'ircNotice',
+            'ircWho',
+            'ircWhois',
+            'ircWhowas',
+            'ircKill',
+            'ircPing',
+            'ircPong',
+            'ircError',
+            'ircAway',
+            'ircRehash',
+            'ircRestart',
+            'ircSummon',
+            'ircUsers',
+            'ircWallops',
+            'ircUserhost',
+            'ircIson',
+            'ctcpFinger',
+            'ctcpFingerResponse',
+            'ctcpVersion',
+            'ctcpVersionResponse',
+            'ctcpSource',
+            'ctcpSourceResponse',
+            'ctcpUserinfo',
+            'ctcpUserinfoResponse',
+            'ctcpClientinfo',
+            'ctcpClientinfoResponse',
+            'ctcpErrmsg',
+            'ctcpErrmsgResponse',
+            'ctcpPing',
+            'ctcpPingResponse',
+            'ctcpTime',
+            'ctcpTimeResponse',
+            'ctcpAction',
+            'ctcpActionResponse',
+            'current',
+            'next',
+            'key',
+            'valid',
+            'rewind',
+            'count',
+        ));
+        $queue->expects($this->once())
+            ->method('ircPrivmsg')
+            ->with('WyriHaximus', 'wyrihaximus.net: 1.2.3.4');
+
         $plugin->handleDnsCommand($event, $queue);
+
+        $deferred->resolve('1.2.3.4');
+    }
+
+    public function testGetResolver()
+    {
+        $plugin = new Plugin(array(
+            'dnsServer' => '4.3.2.1',
+        ));
+
+        $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
+
+        $factory = $this->getMock('React\Dns\Resolver\Factory', array(
+            'createCached',
+        ));
+        $factory->expects($this->once())
+            ->method('createCached')
+            ->with('4.3.2.1');
+
+        $this->assertInstanceOf('React\Dns\Resolver\Resolver', $plugin->getResolver());
     }
 }
