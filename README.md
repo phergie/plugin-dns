@@ -2,7 +2,7 @@
 
 [Phergie](http://github.com/phergie/phergie-irc-bot-react/) plugin for Looking up IP&#039;s by hostnames.
 
-[![Build Status](https://secure.travis-ci.org/wyrihaximus/phergie-dns.png?branch=master)](http://travis-ci.org/wyrihaximus/phergie-dns)
+[![Build Status](https://secure.travis-ci.org/WyriHaximus/PhergieDns.png?branch=master)](http://travis-ci.org/WyriHaximus/PhergieDns)
 
 ## Install
 
