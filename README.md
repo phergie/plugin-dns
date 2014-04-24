@@ -42,4 +42,4 @@ cd tests
 
 ## License
 
-Released under the BSD License. See `LICENSE`.
+Released under the MIT License. See `LICENSE`.
