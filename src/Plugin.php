@@ -14,6 +14,7 @@ use Phergie\Irc\Bot\React\AbstractPlugin;
 use Phergie\Irc\Bot\React\EventQueueInterface;
 use Phergie\Irc\Plugin\React\Command\CommandEvent;
 use React\Dns\Resolver\Factory;
+use React\Dns\Resolver\Resolver;
 
 /**
  * Plugin for Looking up IP&#039;s by hostnames.
@@ -44,6 +45,9 @@ class Plugin extends AbstractPlugin
         }
         if (isset($config['command'])) {
             $this->command = $config['command'];
+        }
+        if (isset($config['resolver']) && $config['resolver'] instanceof Resolver) {
+            $this->resolver = $config['resolver'];
         }
     }
 
@@ -76,7 +80,7 @@ class Plugin extends AbstractPlugin
     }
 
     public function getResolver() {
-        if ($this->resolver !== null) {
+        if ($this->resolver instanceof Resolver) {
             return $this->resolver;
         }
 

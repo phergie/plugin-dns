@@ -23,13 +23,45 @@ use Phergie\Irc\Bot\React\EventQueueInterface;
 class PluginTest extends \PHPUnit_Framework_TestCase
 {
 
+    public function testGetSubscribedEvents()
+    {
+        $plugin = new Plugin();
+        $subscribedEvents = $plugin->getSubscribedEvents();
+        $this->assertInternalType('array', $subscribedEvents);
+        $this->assertSame(array(
+                'command.dns' => 'handleDnsCommand'
+        ), $subscribedEvents);
+    }
+
+    public function testGetSubscribedEventsCustomCommandName()
+    {
+        $plugin = new Plugin(array(
+            'command' => 'dnsCustomName',
+        ));
+        $subscribedEvents = $plugin->getSubscribedEvents();
+        $this->assertInternalType('array', $subscribedEvents);
+        $this->assertSame(array(
+            'command.dnsCustomName' => 'handleDnsCommand'
+        ), $subscribedEvents);
+    }
 
     /**
      * Tests that getSubscribedEvents() returns an array.
      */
-    public function testGetSubscribedEvents()
+    public function _testHandleDnsCommand()
     {
-        $plugin = new Plugin();
-        $this->assertInternalType('array', $plugin->getSubscribedEvents());
+        $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
+            'resolve',
+        ), array(
+            '8.8.8.8:53',
+            $this->getMock('React\Dns\Query\ExecutorInterface'),
+        ));
+
+        $plugin = new Plugin(array(
+            'resolver' => $resolver,
+        ));
+        $event = $this->getMock('Phergie\Irc\Plugin\React\Command\CommandEvent');
+        $queue = $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface');
+        $plugin->handleDnsCommand($event, $queue);
     }
 }
