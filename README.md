@@ -36,6 +36,7 @@ new \WyriHaximus\Phergie\Plugin\Dns\Plugin(array(
 
     'resolver' => new React\Dns\Resolver\Resolver(), // provide your own Resolver instance
                                                      // defaults to null and is set at first use
+                                                     // (don't use this unless you know what you are doing!)
 
 ))
 ```
