@@ -4,7 +4,6 @@
     "keywords": [ "irc", "bot", "react", "plugin" ],
     "license": "MIT",
     "support": {
-        "email": "team@phergie.org",
         "irc": "irc://irc.freenode.net/phergie",
         "issues": "https://github.com/wyrihaximus/PhergieDns/issues",
         "source": "https://github.com/wyrihaximus/PhergieDns"
