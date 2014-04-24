@@ -169,7 +169,19 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         ));
         $factory->expects($this->once())
             ->method('createCached')
-            ->with('4.3.2.1');
+            ->with('4.3.2.1')
+            ->willReturn('foo:bar');
+
+        $this->assertSame('foo:bar', $plugin->getResolver($factory));
+    }
+
+    public function testGetResolverBare()
+    {
+        $plugin = new Plugin(array(
+            'dnsServer' => '4.3.2.1',
+        ));
+
+        $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
 
         $this->assertInstanceOf('React\Dns\Resolver\Resolver', $plugin->getResolver());
     }
