@@ -24,7 +24,18 @@ See Phergie documentation for more information on
 ```php
 new \WyriHaximus\Phergie\Plugin\Dns\Plugin(array(
 
+    // All configuration is optional
 
+    'dnsServer' => '1.2.3.4', // IP address of a DNS server, defaults to Google's 8.8.8.8
+
+    // or
+
+    'command' => 'customDns', // command name, defaults to dns
+
+    // or
+
+    'resolver' => new React\Dns\Resolver\Resolver(), // provide your own Resolver instance
+                                                     // defaults to null and is set at first use
 
 ))
 ```
