@@ -11,7 +11,7 @@ The recommended method of installation is [through composer](http://getcomposer.
 ```JSON
 {
     "require": {
-        "wyrihaximus/phergie-dns": "dev-master"
+        "wyrihaximus/phergie-dns": "0.1.0"
     }
 }
 ```
