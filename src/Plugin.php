@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of PhergieDns.
  *
  ** (c) 2014 Cees-Jan Kiewiet
