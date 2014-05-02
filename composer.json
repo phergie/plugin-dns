@@ -1,7 +1,7 @@
 {
     "name": "wyrihaximus/phergie-dns",
     "description": "Phergie plugin for Looking up IP's by hostnames",
-    "keywords": [ "irc", "bot", "react", "plugin" ],
+    "keywords": [ "irc", "bot", "react", "plugin", "phergie-plugin" ],
     "license": "MIT",
     "support": {
         "irc": "irc://irc.freenode.net/phergie",
