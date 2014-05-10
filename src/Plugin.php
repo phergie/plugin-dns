@@ -12,9 +12,11 @@ namespace WyriHaximus\Phergie\Plugin\Dns;
 
 use Phergie\Irc\Bot\React\AbstractPlugin;
 use Phergie\Irc\Bot\React\EventQueueInterface;
+use Phergie\Irc\Client\React\LoopAwareInterface;
 use Phergie\Irc\Plugin\React\Command\CommandEvent;
 use React\Dns\Resolver\Factory;
 use React\Dns\Resolver\Resolver;
+use React\EventLoop\LoopInterface;
 
 /**
  * Plugin for Looking up IP&#039;s by hostnames.
@@ -22,7 +24,7 @@ use React\Dns\Resolver\Resolver;
  * @category Phergie
  * @package WyriHaximus\Phergie\Plugin\Dns
  */
-class Plugin extends AbstractPlugin
+class Plugin extends AbstractPlugin implements LoopAwareInterface
 {
     protected $resolver;
 
@@ -49,6 +51,10 @@ class Plugin extends AbstractPlugin
         if (isset($config['resolver']) && $config['resolver'] instanceof Resolver) {
             $this->resolver = $config['resolver'];
         }
+    }
+
+    public function setLoop(LoopInterface $loop) {
+        $this->loop = $loop;
     }
 
     /**
