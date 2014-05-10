@@ -60,6 +60,8 @@ class Plugin extends AbstractPlugin
     {
         return array(
             'command.' . $this->command => 'handleDnsCommand',
+            $this->command . '.resolve' => 'resolveDnsQuery',
+            $this->command . '.resolver' => 'getResolver',
         );
     }
 
@@ -69,7 +71,7 @@ class Plugin extends AbstractPlugin
             $message = $hostname . ': ';
             $this->logger->debug('Looking up: ' . $hostname);
             $logger = $this->logger;
-            $this->getResolver()->resolve($hostname)->then(function ($ip) use ($event, $queue, $message, $logger) {
+            $this->resolveDnsQuery($hostname)->then(function ($ip) use ($event, $queue, $message, $logger) {
                 $message = $message . $ip;
                 $logger->debug($message);
                 foreach ($event->getTargets() as $target) {
@@ -93,5 +95,8 @@ class Plugin extends AbstractPlugin
         return $this->resolver;
     }
 
+    public function resolveDnsQuery($hostname) {
+        return $this->getResolver()->resolve($hostname);
+    }
     
 }
