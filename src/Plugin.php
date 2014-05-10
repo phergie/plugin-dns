@@ -19,7 +19,7 @@ use React\Dns\Resolver\Resolver;
 use React\EventLoop\LoopInterface;
 
 /**
- * Plugin for Looking up IP&#039;s by hostnames.
+ * Plugin for Looking up IP's by hostnames.
  *
  * @category Phergie
  * @package WyriHaximus\Phergie\Plugin\Dns
@@ -30,6 +30,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
 
     protected $dnsServer = '8.8.8.8';
     protected $command = 'dns';
+    protected $disableCommand = false;
 
     /**
      * Accepts plugin configuration.
@@ -51,6 +52,9 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         if (isset($config['resolver']) && $config['resolver'] instanceof Resolver) {
             $this->resolver = $config['resolver'];
         }
+        if (isset($config['disableCommand'])) {
+            $this->disableCommand = $config['disableCommand'];
+        }
     }
 
     public function setLoop(LoopInterface $loop) {
@@ -64,11 +68,16 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      */
     public function getSubscribedEvents()
     {
-        return array(
-            'command.' . $this->command => 'handleDnsCommand',
+        $events = array(
             $this->command . '.resolve' => 'resolveDnsQuery',
             $this->command . '.resolver' => 'getResolver',
         );
+
+        if (!$this->disableCommand) {
+            $events['command.' . $this->command] = 'handleDnsCommand';
+        }
+
+        return $events;
     }
 
     public function handleDnsCommand(CommandEvent $event, EventQueueInterface $queue)
@@ -87,6 +96,11 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         }
     }
 
+    /**
+     * @param Factory $factory
+     *
+     * @return Resolver
+     */
     public function getResolver(Factory $factory = null) {
         if ($this->resolver instanceof Resolver) {
             return $this->resolver;
@@ -101,6 +115,11 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         return $this->resolver;
     }
 
+    /**
+     * @param $hostname
+     *
+     * @return React\Promise\DeferredPromise
+     */
     public function resolveDnsQuery($hostname) {
         return $this->getResolver()->resolve($hostname);
     }
