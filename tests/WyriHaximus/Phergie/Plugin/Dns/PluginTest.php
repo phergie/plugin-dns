@@ -25,7 +25,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $subscribedEvents = $plugin->getSubscribedEvents();
         $this->assertInternalType('array', $subscribedEvents);
         $this->assertSame(array(
-                'command.dns' => 'handleDnsCommand'
+            'command.dns' => 'handleDnsCommand',
+            'dns.resolve' => 'resolveDnsQuery',
+            'dns.resolver' => 'getResolver',
         ), $subscribedEvents);
     }
 
@@ -37,7 +39,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $subscribedEvents = $plugin->getSubscribedEvents();
         $this->assertInternalType('array', $subscribedEvents);
         $this->assertSame(array(
-            'command.dnsCustomName' => 'handleDnsCommand'
+            'command.dnsCustomName' => 'handleDnsCommand',
+            'dnsCustomName.resolve' => 'resolveDnsQuery',
+            'dnsCustomName.resolver' => 'getResolver',
         ), $subscribedEvents);
     }
 
@@ -184,5 +188,26 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
 
         $this->assertInstanceOf('React\Dns\Resolver\Resolver', $plugin->getResolver());
+    }
+
+    public function testResolveDnsQuery()
+    {
+        $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
+                'resolve',
+            ), array(
+                '8.8.8.8:53',
+                $this->getMock('React\Dns\Query\ExecutorInterface'),
+            ));
+        $deferred = new \React\Promise\Deferred();
+        $resolver->expects($this->once())
+            ->method('resolve')
+            ->with('wyrihaximus.net')
+            ->willReturn($deferred->promise());
+
+        $plugin = new Plugin(array(
+            'resolver' => $resolver,
+        ));
+
+        $plugin->resolveDnsQuery('wyrihaximus.net');
     }
 }
