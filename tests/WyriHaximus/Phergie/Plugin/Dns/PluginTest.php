@@ -26,7 +26,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $subscribedEvents);
         $this->assertSame(array(
             'dns.resolve' => 'resolveDnsQuery',
-            'dns.resolver' => 'getResolver',
+            'dns.resolver' => 'getResolverEvent',
             'command.dns' => 'handleDnsCommand',
         ), $subscribedEvents);
     }
@@ -40,7 +40,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $subscribedEvents);
         $this->assertSame(array(
             'dnsCustomName.resolve' => 'resolveDnsQuery',
-            'dnsCustomName.resolver' => 'getResolver',
+            'dnsCustomName.resolver' => 'getResolverEvent',
             'command.dnsCustomName' => 'handleDnsCommand',
         ), $subscribedEvents);
     }
@@ -54,7 +54,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $subscribedEvents);
         $this->assertSame(array(
                 'dns.resolve' => 'resolveDnsQuery',
-                'dns.resolver' => 'getResolver',
+                'dns.resolver' => 'getResolverEvent',
             ), $subscribedEvents);
     }
 
@@ -201,6 +201,23 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
 
         $this->assertInstanceOf('React\Dns\Resolver\Resolver', $plugin->getResolver());
+    }
+
+    public function testGetResolverEvent()
+    {
+        $plugin = new Plugin();
+
+        $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
+
+        $callbackFired = false;
+        $that = $this;
+        $callback = function($resolver) use (&$callbackFired, $that) {
+            $that->assertInstanceOf('React\Dns\Resolver\Resolver', $resolver);
+            $callbackFired = true;
+        };
+
+        $plugin->getResolverEvent($callback);
+        $this->assertTrue($callbackFired);
     }
 
     public function testResolveDnsQuery()

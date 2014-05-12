@@ -70,7 +70,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     {
         $events = array(
             $this->command . '.resolve' => 'resolveDnsQuery',
-            $this->command . '.resolver' => 'getResolver',
+            $this->command . '.resolver' => 'getResolverEvent',
         );
 
         if (!$this->disableCommand) {
@@ -113,6 +113,13 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         $this->resolver = $factory->createCached($this->dnsServer, $this->loop);
 
         return $this->resolver;
+    }
+
+    /**
+     * @param callable $callback
+     */
+    public function getResolverEvent($callback) {
+        $callback($this->getResolver());
     }
 
     /**
