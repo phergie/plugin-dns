@@ -86,12 +86,14 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
             $message = $hostname . ': ';
             $this->logger->debug('Looking up: ' . $hostname);
             $logger = $this->logger;
-            $this->resolveDnsQuery($hostname)->then(function ($ip) use ($event, $queue, $message, $logger) {
-                $message = $message . $ip;
-                $logger->debug($message);
-                foreach ($event->getTargets() as $target) {
-                    $queue->ircPrivmsg($target, $message);
-                }
+            $this->resolveDnsQuery($hostname, function($promise) use ($event, $queue, $message, $logger) {
+                $promise->then(function ($ip) use ($event, $queue, $message, $logger) {
+                    $message = $message . $ip;
+                    $logger->debug($message);
+                    foreach ($event->getTargets() as $target) {
+                        $queue->ircPrivmsg($target, $message);
+                    }
+                });
             });
         }
     }
@@ -127,8 +129,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return React\Promise\DeferredPromise
      */
-    public function resolveDnsQuery($hostname) {
-        return $this->getResolver()->resolve($hostname);
+    public function resolveDnsQuery($hostname, $callback) {
+        $callback($this->getResolver()->resolve($hostname));
     }
     
 }

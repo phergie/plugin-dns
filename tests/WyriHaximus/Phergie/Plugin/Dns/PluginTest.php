@@ -238,6 +238,14 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             'resolver' => $resolver,
         ));
 
-        $this->assertInstanceOf('React\Promise\DeferredPromise', $plugin->resolveDnsQuery('wyrihaximus.net'));
+        $callbackFired = false;
+        $that = $this;
+        $callback = function($promise) use (&$callbackFired, $that) {
+            $that->assertInstanceOf('React\Promise\DeferredPromise', $promise);
+            $callbackFired = true;
+        };
+
+        $plugin->resolveDnsQuery('wyrihaximus.net', $callback);
+        $this->assertTrue($callbackFired);
     }
 }
