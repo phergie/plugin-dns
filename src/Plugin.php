@@ -80,16 +80,20 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         return $events;
     }
 
+    public function logDebug($message) {
+        $this->logger->debug('[Dns]' . $message);
+    }
+
     public function handleDnsCommand(CommandEvent $event, EventQueueInterface $queue)
     {
         foreach ($event->getCustomParams() as $hostname) {
             $message = $hostname . ': ';
-            $this->logger->debug('Looking up: ' . $hostname);
-            $logger = $this->logger;
-            $this->resolveDnsQuery($hostname, function($promise) use ($event, $queue, $message, $logger) {
-                $promise->then(function ($ip) use ($event, $queue, $message, $logger) {
+            $this->logDebug('Looking up: ' . $hostname);
+            $that = $this;
+            $this->resolveDnsQuery($hostname, function($promise) use ($event, $queue, $message, $that) {
+                $promise->then(function ($ip) use ($event, $queue, $message, $that) {
                     $message = $message . $ip;
-                    $logger->debug($message);
+                    $that->logDebug($message);
                     foreach ($event->getTargets() as $target) {
                         $queue->ircPrivmsg($target, $message);
                     }
@@ -105,12 +109,15 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      */
     public function getResolver(Factory $factory = null) {
         if ($this->resolver instanceof Resolver) {
+            $this->logDebug('Existing Resolver found using it');
             return $this->resolver;
         }
 
         if ($factory === null) {
             $factory = new Factory();
         }
+
+        $this->logDebug('Creating new Resolver');
 
         $this->resolver = $factory->createCached($this->dnsServer, $this->loop);
 
@@ -121,6 +128,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      * @param callable $callback
      */
     public function getResolverEvent($callback) {
+        $this->logDebug($this->command . '.resolver called');
         $callback($this->getResolver());
     }
 
@@ -130,6 +138,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      * @return React\Promise\DeferredPromise
      */
     public function resolveDnsQuery($hostname, $callback) {
+        $this->logDebug($this->command . '.resolve called for: ' . $hostname);
         $callback($this->getResolver()->resolve($hostname));
     }
     
