@@ -180,6 +180,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         ));
 
         $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
+        $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
 
         $factory = $this->getMock('React\Dns\Resolver\Factory', array(
             'createCached',
@@ -199,6 +200,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         ));
 
         $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
+        $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
 
         $this->assertInstanceOf('React\Dns\Resolver\Resolver', $plugin->getResolver());
     }
@@ -208,6 +210,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin = new Plugin();
 
         $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
+        $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
 
         $callbackFired = false;
         $that = $this;
@@ -237,6 +240,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin = new Plugin(array(
             'resolver' => $resolver,
         ));
+
+        $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
 
         $callbackFired = false;
         $that = $this;
