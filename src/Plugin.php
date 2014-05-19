@@ -37,7 +37,13 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * Supported keys:
      *
+     * dnsServer - optional DNS Server's IP address to use for lookups, defaults to 8.8.8.8
      *
+     * command - optional command name, can be used to setup separate multiple DNS resolvers, defaults to dns
+     *
+     * resolver - optional Resolver instance, defaults to calling the 'dns.resolver' event
+     *
+     * disableCommand - disable the command if you don't need it, defaults to false
      *
      * @param array $config
      */
