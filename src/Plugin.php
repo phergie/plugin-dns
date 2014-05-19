@@ -68,7 +68,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     }
 
     /**
-     *
+     * Indicates that the plugin provides DNS resolving services.
      *
      * @return array
      */
