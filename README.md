@@ -52,7 +52,7 @@ This plugin listens on a few events providing the resolver to other plugins that
 
 ### dns.resolve
 
-The `dns.resolve` event accepts a callback that will be called with a `Promise` that will resolve once the given hostname has been resolved. (If promises are new to you, be sure to read (this)[https://gist.github.com/domenic/3889970].)
+The `dns.resolve` event accepts a callback that will be called with a `Promise` that will resolve once the given hostname has been resolved. (If promises are new to you, be sure to read [this](https://gist.github.com/domenic/3889970).)
 
 ```php
 $this->emitter->emit('dns.resolve', array(function($promise) use ($that, $callback, $that) {
