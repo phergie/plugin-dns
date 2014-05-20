@@ -173,6 +173,15 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $deferred->resolve('1.2.3.4');
     }
 
+    /**
+     * @expectedException BadMethodCallException
+     */
+    public function testHandleDnsCommandException()
+    {
+        $plugin = new Plugin();
+        $plugin->handleDnsCommand($this->getMock('Phergie\Irc\Event\UserEvent'), $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface'));
+    }
+
     public function testGetResolver()
     {
         $plugin = new Plugin(array(
