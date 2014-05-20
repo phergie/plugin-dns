@@ -30,7 +30,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
 
     protected $dnsServer = '8.8.8.8';
     protected $command = 'dns';
-    protected $disableCommand = false;
+    protected $enableCommand = false;
 
     /**
      * Accepts plugin configuration.
@@ -43,7 +43,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * resolver - optional Resolver instance, defaults to calling the 'dns.resolver' event
      *
-     * disableCommand - disable the command if you don't need it, defaults to false
+     * enableCommand - enable the command if you want to use it, defaults to false
      *
      * @param array $config
      */
@@ -58,8 +58,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         if (isset($config['resolver']) && $config['resolver'] instanceof Resolver) {
             $this->resolver = $config['resolver'];
         }
-        if (isset($config['disableCommand'])) {
-            $this->disableCommand = $config['disableCommand'];
+        if (isset($config['enableCommand'])) {
+            $this->enableCommand = $config['enableCommand'];
         }
     }
 
@@ -79,7 +79,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
             $this->command . '.resolver' => 'getResolverEvent',
         );
 
-        if (!$this->disableCommand) {
+        if ($this->enableCommand) {
             $events['command.' . $this->command] = 'handleDnsCommand';
         }
 

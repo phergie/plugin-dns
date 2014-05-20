@@ -27,7 +27,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(
             'dns.resolve' => 'resolveDnsQuery',
             'dns.resolver' => 'getResolverEvent',
-            'command.dns' => 'handleDnsCommand',
         ), $subscribedEvents);
     }
 
@@ -35,6 +34,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     {
         $plugin = new Plugin(array(
             'command' => 'dnsCustomName',
+            'enableCommand' => true,
         ));
         $subscribedEvents = $plugin->getSubscribedEvents();
         $this->assertInternalType('array', $subscribedEvents);
@@ -45,16 +45,17 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         ), $subscribedEvents);
     }
 
-    public function testGetSubscribedEventsDisabledCommand()
+    public function testGetSubscribedEventsEnabledCommand()
     {
         $plugin = new Plugin(array(
-            'disableCommand' => true,
+            'enableCommand' => true,
         ));
         $subscribedEvents = $plugin->getSubscribedEvents();
         $this->assertInternalType('array', $subscribedEvents);
         $this->assertSame(array(
                 'dns.resolve' => 'resolveDnsQuery',
                 'dns.resolver' => 'getResolverEvent',
+                'command.dns' => 'handleDnsCommand',
             ), $subscribedEvents);
     }
 
