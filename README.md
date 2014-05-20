@@ -40,9 +40,7 @@ new \WyriHaximus\Phergie\Plugin\Dns\Plugin(array(
 
     // or
 
-    'disableCommand' => false, // disable use access to the dns command
-                               // usefull if you need this plugin for other plugins like the http plugin
-                               // but don't want user access to the command
+    'enableCommand' => false,  // enable use access to the dns command
 ))
 ```
 
