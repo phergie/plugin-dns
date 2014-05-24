@@ -34,11 +34,11 @@ class Query
 
     public function callResolve($ip) {
         $resolveCallback = $this->resolveCallback;
-        return $resolveCallback($ip);
+        return $resolveCallback($ip, $this->hostname);
     }
 
     public function callReject($error) {
         $rejectCallback = $this->rejectCallback;
-        return $rejectCallback($error);
+        return $rejectCallback($error, $this->hostname);
     }
 }

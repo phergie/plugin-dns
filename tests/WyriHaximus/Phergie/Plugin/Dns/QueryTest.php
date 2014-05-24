@@ -29,8 +29,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     {
         $callbackFired = false;
         $that = $this;
-        $callback = function($ip) use (&$callbackFired, $that) {
+        $callback = function($ip, $hostname) use (&$callbackFired, $that) {
             $that->assertSame('foo:bar', $ip);
+            $that->assertSame('wyrihaximus.net', $hostname);
             $callbackFired = true;
         };
 
@@ -45,8 +46,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     {
         $callbackFired = false;
         $that = $this;
-        $callback = function($ip) use (&$callbackFired, $that) {
-            $that->assertSame('foo:bar', $ip);
+        $callback = function($error, $hostname) use (&$callbackFired, $that) {
+            $that->assertSame('foo:bar', $error);
+            $that->assertSame('wyrihaximus.net', $hostname);
             $callbackFired = true;
         };
 
