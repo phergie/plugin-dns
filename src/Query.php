@@ -18,12 +18,18 @@ namespace WyriHaximus\Phergie\Plugin\Dns;
  */
 class Query
 {
+    protected $hostname;
     protected $resolveCallback;
     protected $rejectCallback;
 
-    public function __construct(callable $resolveCallback, callable $rejectCallback) {
+    public function __construct($hostname, callable $resolveCallback, callable $rejectCallback) {
+        $this->hostname = $hostname;
         $this->resolveCallback = $resolveCallback;
         $this->rejectCallback = $rejectCallback;
+    }
+
+    public function getHostname() {
+        return $this->hostname;
     }
 
     public function callResolve($ip) {

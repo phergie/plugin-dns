@@ -18,6 +18,13 @@ namespace WyriHaximus\Phergie\Plugin\Dns;
  */
 class QueryTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetHostname()
+    {
+        $query = new Query('wyrihaximus.net', function() {}, function() {});
+
+        $this->assertSame('wyrihaximus.net', $query->getHostname());
+    }
+
     public function testCallResolve()
     {
         $callbackFired = false;
@@ -27,7 +34,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
             $callbackFired = true;
         };
 
-        $query = new Query($callback, function() {});
+        $query = new Query('wyrihaximus.net', $callback, function() {});
 
         $query->callResolve('foo:bar');
 
@@ -43,7 +50,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
             $callbackFired = true;
         };
 
-        $query = new Query(function() {}, $callback);
+        $query = new Query('wyrihaximus.net', function() {}, $callback);
 
         $query->callReject('foo:bar');
 
