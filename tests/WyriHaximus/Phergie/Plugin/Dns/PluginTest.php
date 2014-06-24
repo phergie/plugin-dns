@@ -173,6 +173,121 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $deferred->resolve('1.2.3.4');
     }
 
+    public function testHandleDnsCommandError()
+    {
+        $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
+            'resolve',
+        ), array(
+            '8.8.8.8:53',
+            $this->getMock('React\Dns\Query\ExecutorInterface'),
+        ));
+        $deferred = new \React\Promise\Deferred();
+        $resolver->expects($this->once())
+            ->method('resolve')
+            ->with('wyrihaximus.net')
+            ->willReturn($deferred->promise());
+
+        $plugin = new Plugin(array(
+            'resolver' => $resolver,
+        ));
+
+        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $plugin->setLogger($logger);
+
+        $event = $this->getMock('Phergie\Irc\Plugin\React\Command\CommandEvent', array(
+            'getCustomParams',
+            'getTargets',
+        ));
+        $event->expects($this->once())
+            ->method('getCustomParams')
+            ->with()
+            ->willReturn(array(
+                'wyrihaximus.net',
+            ));
+        $event->expects($this->once())
+            ->method('getTargets')
+            ->with()
+            ->willReturn(array(
+                'WyriHaximus',
+            ));
+
+        $queue = $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface', array(
+            'ircPrivmsg',
+            'extract',
+            'setPrefix',
+            'ircPass',
+            'ircNick',
+            'ircUser',
+            'ircServer',
+            'ircOper',
+            'ircQuit',
+            'ircJoin',
+            'ircPart',
+            'ircMode',
+            'ircSquit',
+            'ircTopic',
+            'ircNames',
+            'ircList',
+            'ircInvite',
+            'ircKick',
+            'ircVersion',
+            'ircStats',
+            'ircLinks',
+            'ircTime',
+            'ircConnect',
+            'ircTrace',
+            'ircAdmin',
+            'ircInfo',
+            'ircNotice',
+            'ircWho',
+            'ircWhois',
+            'ircWhowas',
+            'ircKill',
+            'ircPing',
+            'ircPong',
+            'ircError',
+            'ircAway',
+            'ircRehash',
+            'ircRestart',
+            'ircSummon',
+            'ircUsers',
+            'ircWallops',
+            'ircUserhost',
+            'ircIson',
+            'ctcpFinger',
+            'ctcpFingerResponse',
+            'ctcpVersion',
+            'ctcpVersionResponse',
+            'ctcpSource',
+            'ctcpSourceResponse',
+            'ctcpUserinfo',
+            'ctcpUserinfoResponse',
+            'ctcpClientinfo',
+            'ctcpClientinfoResponse',
+            'ctcpErrmsg',
+            'ctcpErrmsgResponse',
+            'ctcpPing',
+            'ctcpPingResponse',
+            'ctcpTime',
+            'ctcpTimeResponse',
+            'ctcpAction',
+            'ctcpActionResponse',
+            'current',
+            'next',
+            'key',
+            'valid',
+            'rewind',
+            'count',
+        ));
+        $queue->expects($this->once())
+            ->method('ircPrivmsg')
+            ->with('WyriHaximus', 'wyrihaximus.net: error looking up hostname: Error');
+
+        $plugin->handleDnsCommand($event, $queue);
+
+        $deferred->reject(new \Exception('Error'));
+    }
+
     public function testGetResolver()
     {
         $plugin = new Plugin(array(
@@ -226,11 +341,11 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     public function testResolveDnsQuery()
     {
         $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
-                'resolve',
-            ), array(
-                '8.8.8.8:53',
-                $this->getMock('React\Dns\Query\ExecutorInterface'),
-            ));
+            'resolve',
+        ), array(
+            '8.8.8.8:53',
+            $this->getMock('React\Dns\Query\ExecutorInterface'),
+        ));
         $deferred = new \React\Promise\Deferred();
         $resolver->expects($this->once())
             ->method('resolve')
@@ -245,12 +360,45 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
         $callbackFired = false;
         $that = $this;
-        $callback = function($promise) use (&$callbackFired, $that) {
-            $that->assertInstanceOf('React\Promise\DeferredPromise', $promise);
+        $callback = function($ip) use (&$callbackFired, $that) {
+            $that->assertSame('1.2.3.4', $ip);
             $callbackFired = true;
         };
 
-        $plugin->resolveDnsQuery('wyrihaximus.net', $callback);
+        $plugin->resolveDnsQuery(new Query('wyrihaximus.net', $callback, function() {}));
+        $deferred->resolve('1.2.3.4');
+        $this->assertTrue($callbackFired);
+    }
+
+    public function testRejectDnsQuery()
+    {
+        $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
+            'resolve',
+        ), array(
+            '8.8.8.8:53',
+            $this->getMock('React\Dns\Query\ExecutorInterface'),
+        ));
+        $deferred = new \React\Promise\Deferred();
+        $resolver->expects($this->once())
+            ->method('resolve')
+            ->with('wyrihaximus.net')
+            ->willReturn($deferred->promise());
+
+        $plugin = new Plugin(array(
+            'resolver' => $resolver,
+        ));
+
+        $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
+
+        $callbackFired = false;
+        $that = $this;
+        $callback = function($error) use (&$callbackFired, $that) {
+            $that->isInstanceOf('Exception', $error);
+            $callbackFired = true;
+        };
+
+        $plugin->resolveDnsQuery(new Query('wyrihaximus.net', function() {}, $callback));
+        $deferred->reject(new \Exception('Error'));
         $this->assertTrue($callbackFired);
     }
 }

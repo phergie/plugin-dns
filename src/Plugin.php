@@ -87,18 +87,21 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     public function handleDnsCommand(CommandEvent $event, EventQueueInterface $queue)
     {
         foreach ($event->getCustomParams() as $hostname) {
-            $message = $hostname . ': ';
             $this->logDebug('Looking up: ' . $hostname);
             $that = $this;
-            $this->resolveDnsQuery($hostname, function($promise) use ($event, $queue, $message, $that) {
-                $promise->then(function ($ip) use ($event, $queue, $message, $that) {
-                    $message = $message . $ip;
-                    $that->logDebug($message);
-                    foreach ($event->getTargets() as $target) {
-                        $queue->ircPrivmsg($target, $message);
-                    }
-                });
-            });
+            $this->resolveDnsQuery(new Query($hostname, function($ip, $hostname) use ($event, $queue, $that) {
+                $message = $hostname . ': ' . $ip;
+                $that->logDebug($message);
+                foreach ($event->getTargets() as $target) {
+                    $queue->ircPrivmsg($target, $message);
+                }
+            }, function($error, $hostname) use ($event, $queue, $that) {
+                $message = $hostname . ': error looking up hostname: ' . $error->getMessage();
+                $that->logDebug($message);
+                foreach ($event->getTargets() as $target) {
+                    $queue->ircPrivmsg($target, $message);
+                }
+            }));
         }
     }
 
@@ -118,7 +121,6 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         }
 
         $this->logDebug('Creating new Resolver');
-
         $this->resolver = $factory->createCached($this->dnsServer, $this->loop);
 
         return $this->resolver;
@@ -133,13 +135,18 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     }
 
     /**
-     * @param $hostname
-     *
-     * @return React\Promise\DeferredPromise
+     * @param Query $query
      */
-    public function resolveDnsQuery($hostname, $callback) {
-        $this->logDebug($this->command . '.resolve called for: ' . $hostname);
-        $callback($this->getResolver()->resolve($hostname));
+    public function resolveDnsQuery(Query $query) {
+        $that = $this;
+        $this->logDebug($this->command . '.resolve called for: ' . $query->getHostname());
+        $this->getResolver()->resolve($query->getHostname())->then(function($ip) use ($that, $query) {
+            $that->logDebug('IP for hostname ' . $query->getHostname() . ' found: ' . $ip);
+            $query->callResolve($ip);
+        }, function($error) use ($that, $query) {
+            $that->logDebug('IP for hostname ' . $query->getHostname() . ' not found: ' . $error->getMessage());
+            $query->callReject($error);
+        });
     }
     
 }
