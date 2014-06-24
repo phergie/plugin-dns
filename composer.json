@@ -10,7 +10,8 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "react/dns": "0.3.2"
+        "react/dns": "0.3.2",
+        "phergie/phergie-irc-bot-react": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "4.0.*",
