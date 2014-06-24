@@ -13,7 +13,7 @@ namespace WyriHaximus\Phergie\Plugin\Dns;
 use Phergie\Irc\Bot\React\AbstractPlugin;
 use Phergie\Irc\Bot\React\EventQueueInterface;
 use Phergie\Irc\Client\React\LoopAwareInterface;
-use Phergie\Irc\Plugin\React\Command\CommandEvent;
+use Phergie\Irc\Event\UserEvent;
 use React\Dns\Resolver\Factory;
 use React\Dns\Resolver\Resolver;
 use React\EventLoop\LoopInterface;
@@ -30,14 +30,20 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
 
     protected $dnsServer = '8.8.8.8';
     protected $command = 'dns';
-    protected $disableCommand = false;
+    protected $enableCommand = false;
 
     /**
      * Accepts plugin configuration.
      *
      * Supported keys:
      *
+     * dnsServer - optional DNS Server's IP address to use for lookups, defaults to 8.8.8.8
      *
+     * command - optional command name, can be used to setup separate multiple DNS resolvers, defaults to dns
+     *
+     * resolver - optional Resolver instance, defaults to calling the 'dns.resolver' event
+     *
+     * enableCommand - enable the command if you want to use it, defaults to false
      *
      * @param array $config
      */
@@ -52,8 +58,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         if (isset($config['resolver']) && $config['resolver'] instanceof Resolver) {
             $this->resolver = $config['resolver'];
         }
-        if (isset($config['disableCommand'])) {
-            $this->disableCommand = $config['disableCommand'];
+        if (isset($config['enableCommand'])) {
+            $this->enableCommand = $config['enableCommand'];
         }
     }
 
@@ -62,7 +68,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     }
 
     /**
-     *
+     * Indicates that the plugin provides DNS resolving services.
      *
      * @return array
      */
@@ -73,7 +79,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
             $this->command . '.resolver' => 'getResolverEvent',
         );
 
-        if (!$this->disableCommand) {
+        if ($this->enableCommand) {
             $events['command.' . $this->command] = 'handleDnsCommand';
         }
 
@@ -84,8 +90,12 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         $this->logger->debug('[Dns]' . $message);
     }
 
-    public function handleDnsCommand(CommandEvent $event, EventQueueInterface $queue)
+    public function handleDnsCommand(UserEvent $event, EventQueueInterface $queue)
     {
+        if (get_class($event) !== '\Phergie\Irc\Plugin\React\Command\CommandEvent' && !is_subclass_of($event, '\Phergie\Irc\Plugin\React\Command\CommandEvent')) {
+            throw new \BadMethodCallException(get_class($event) . ' given, expected: Phergie\Irc\Plugin\React\Command\CommandEvent');
+        }
+
         foreach ($event->getCustomParams() as $hostname) {
             $this->logDebug('Looking up: ' . $hostname);
             $that = $this;

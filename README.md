@@ -40,10 +40,36 @@ new \WyriHaximus\Phergie\Plugin\Dns\Plugin(array(
 
     // or
 
-    'disableCommand' => false, // disable use access to the dns command
-                               // usefull if you need this plugin for other plugins like the http plugin
-                               // but don't want user access to the command
+    'enableCommand' => false,  // enable use access to the dns command
 ))
+```
+
+## Events
+
+This plugin listens on a few events providing the resolver to other plugins that wish to make use of it.
+
+### dns.resolve
+
+The `dns.resolve` event accepts a callback that will be called with a `Promise` that will resolve once the given hostname has been resolved. (If promises are new to you, be sure to read [this](https://gist.github.com/domenic/3889970).)
+
+```php
+$this->emitter->emit('dns.resolve', array(function($promise) use ($that, $callback, $that) {
+    $promise->then(function($ip) {
+        echo 'IP for github.com: ' . $ip . PHP_EOL;
+    });
+}));
+```
+
+### dns.resolver
+
+The `dns.resolver` event accepts a callback that will be called once a `Resolver` instance has been created.
+
+```php
+$this->emitter->emit('dns.resolver', array(function($resolver) use ($that, $callback, $that) {
+    $resolver->resolve('github.com')->then(function($ip) {
+        echo 'IP for github.com: ' . $ip . PHP_EOL;
+    });
+}));
 ```
 
 ## Tests
