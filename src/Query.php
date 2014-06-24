@@ -22,7 +22,7 @@ class Query
     protected $resolveCallback;
     protected $rejectCallback;
 
-    public function __construct($hostname, callable $resolveCallback, callable $rejectCallback) {
+    public function __construct($hostname, $resolveCallback, $rejectCallback) {
         $this->hostname = $hostname;
         $this->resolveCallback = $resolveCallback;
         $this->rejectCallback = $rejectCallback;
