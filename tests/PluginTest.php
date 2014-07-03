@@ -8,7 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace WyriHaximus\Phergie\Plugin\Dns;
+namespace WyriHaximus\Phergie\Tests\Plugin\Dns;
+
+use WyriHaximus\Phergie\Plugin\Dns\Plugin;
+use WyriHaximus\Phergie\Plugin\Dns\Query;
 
 /**
  * Tests for the Plugin class.
