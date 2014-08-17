@@ -27,6 +27,7 @@ use React\EventLoop\LoopInterface;
 class Plugin extends AbstractPlugin implements LoopAwareInterface
 {
     protected $resolver;
+    protected $loop;
 
     protected $dnsServer = '8.8.8.8';
     protected $command = 'dns';
