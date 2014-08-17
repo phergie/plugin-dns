@@ -22,6 +22,10 @@ class Query
     protected $resolveCallback;
     protected $rejectCallback;
 
+    /**
+     * @param \Closure $resolveCallback
+     * @param \Closure $rejectCallback
+     */
     public function __construct($hostname, $resolveCallback, $rejectCallback) {
         $this->hostname = $hostname;
         $this->resolveCallback = $resolveCallback;
