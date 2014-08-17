@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5ef9fb3acea8b8f259a72a7d20dbbafc",
+    "hash": "d282625e3066cbde56259a67ceef49d8",
     "packages": [
         {
             "name": "evenement/evenement",
@@ -1379,11 +1379,17 @@
             "time": "2014-04-18 20:40:13"
         }
     ],
-    "aliases": [],
+    "aliases": [
+
+    ],
     "minimum-stability": "dev",
     "stability-flags": {
         "phergie/phergie-irc-bot-react": 20
     },
-    "platform": [],
-    "platform-dev": []
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }

@@ -25,5 +25,10 @@
         "psr-4": {
             "WyriHaximus\\Phergie\\Plugin\\Dns\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WyriHaximus\\Phergie\\Tests\\Plugin\\Dns\\": "tests"
+        }
     }
 }
