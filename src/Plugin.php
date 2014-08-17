@@ -33,7 +33,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     protected $resolver;
 
     /**
-     * @var null|LoopInterface
+     * @var LoopInterface
      */
     protected $loop;
 
