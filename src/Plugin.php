@@ -13,7 +13,7 @@ namespace WyriHaximus\Phergie\Plugin\Dns;
 use Phergie\Irc\Bot\React\AbstractPlugin;
 use Phergie\Irc\Bot\React\EventQueueInterface;
 use Phergie\Irc\Client\React\LoopAwareInterface;
-use Phergie\Irc\Event\UserEvent;
+use Phergie\Irc\Plugin\React\Command\CommandEventInterface;
 use React\Dns\Resolver\Factory;
 use React\Dns\Resolver\Resolver;
 use React\EventLoop\LoopInterface;
@@ -117,12 +117,12 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     }
 
     /**
-     * @param UserEvent $event
+     * @param CommandEventInterface $event
      * @param EventQueueInterface $queue
      *
      * @throws \BadMethodCallException
      */
-    public function handleDnsCommand(UserEvent $event, EventQueueInterface $queue)
+    public function handleDnsCommand(CommandEventInterface $event, EventQueueInterface $queue)
     {
         if (get_class($event) !== '\Phergie\Irc\Plugin\React\Command\CommandEvent' && !is_subclass_of($event, '\Phergie\Irc\Plugin\React\Command\CommandEvent')) {
             throw new \BadMethodCallException(get_class($event) . ' given, expected: Phergie\Irc\Plugin\React\Command\CommandEvent');

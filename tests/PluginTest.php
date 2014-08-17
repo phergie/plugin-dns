@@ -183,7 +183,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     public function testHandleDnsCommandException()
     {
         $plugin = new Plugin();
-        $plugin->handleDnsCommand($this->getMock('Phergie\Irc\Event\UserEvent'), $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface'));
+        $plugin->handleDnsCommand($this->getMock('Phergie\Irc\Plugin\React\Command\CommandEventInterface'), $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface'));
     }
 
     public function testHandleDnsCommandError()
