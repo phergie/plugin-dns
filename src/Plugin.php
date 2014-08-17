@@ -26,11 +26,30 @@ use React\EventLoop\LoopInterface;
  */
 class Plugin extends AbstractPlugin implements LoopAwareInterface
 {
+
+    /**
+     * @var null|Resolver
+     */
     protected $resolver;
+
+    /**
+     * @var null|LoopInterface
+     */
     protected $loop;
 
+    /**
+     * @var string
+     */
     protected $dnsServer = '8.8.8.8';
+
+    /**
+     * @var string
+     */
     protected $command = 'dns';
+
+    /**
+     * @var bool
+     */
     protected $enableCommand = false;
 
     /**
@@ -64,6 +83,9 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         }
     }
 
+    /**
+     * @param LoopInterface $loop
+     */
     public function setLoop(LoopInterface $loop) {
         $this->loop = $loop;
     }
@@ -87,10 +109,19 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         return $events;
     }
 
+    /**
+     * @param string $message
+     */
     public function logDebug($message) {
         $this->logger->debug('[Dns]' . $message);
     }
 
+    /**
+     * @param UserEvent $event
+     * @param EventQueueInterface $queue
+     *
+     * @throws \BadMethodCallException
+     */
     public function handleDnsCommand(UserEvent $event, EventQueueInterface $queue)
     {
         if (get_class($event) !== '\Phergie\Irc\Plugin\React\Command\CommandEvent' && !is_subclass_of($event, '\Phergie\Irc\Plugin\React\Command\CommandEvent')) {
