@@ -26,22 +26,26 @@ class Query
      * @param \Closure $resolveCallback
      * @param \Closure $rejectCallback
      */
-    public function __construct($hostname, $resolveCallback, $rejectCallback) {
+    public function __construct($hostname, $resolveCallback, $rejectCallback)
+    {
         $this->hostname = $hostname;
         $this->resolveCallback = $resolveCallback;
         $this->rejectCallback = $rejectCallback;
     }
 
-    public function getHostname() {
+    public function getHostname()
+    {
         return $this->hostname;
     }
 
-    public function callResolve($ip) {
+    public function callResolve($ip)
+    {
         $resolveCallback = $this->resolveCallback;
         return $resolveCallback($ip, $this->hostname);
     }
 
-    public function callReject($error) {
+    public function callReject($error)
+    {
         $rejectCallback = $this->rejectCallback;
         return $rejectCallback($error, $this->hostname);
     }
