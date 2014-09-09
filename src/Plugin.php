@@ -86,7 +86,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @param LoopInterface $loop
      */
-    public function setLoop(LoopInterface $loop) {
+    public function setLoop(LoopInterface $loop)
+    {
         $this->loop = $loop;
     }
 
@@ -112,7 +113,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @param string $message
      */
-    public function logDebug($message) {
+    public function logDebug($message)
+    {
         $this->logger->debug('[Dns]' . $message);
     }
 
@@ -131,13 +133,13 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         foreach ($event->getCustomParams() as $hostname) {
             $this->logDebug('Looking up: ' . $hostname);
             $that = $this;
-            $this->resolveDnsQuery(new Query($hostname, function($ip, $hostname) use ($event, $queue, $that) {
+            $this->resolveDnsQuery(new Query($hostname, function ($ip, $hostname) use ($event, $queue, $that) {
                 $message = $hostname . ': ' . $ip;
                 $that->logDebug($message);
                 foreach ($event->getTargets() as $target) {
                     $queue->ircPrivmsg($target, $message);
                 }
-            }, function($error, $hostname) use ($event, $queue, $that) {
+            }, function ($error, $hostname) use ($event, $queue, $that) {
                 $message = $hostname . ': error looking up hostname: ' . $error->getMessage();
                 $that->logDebug($message);
                 foreach ($event->getTargets() as $target) {
@@ -152,7 +154,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return Resolver
      */
-    public function getResolver(Factory $factory = null) {
+    public function getResolver(Factory $factory = null)
+    {
         if ($this->resolver instanceof Resolver) {
             $this->logDebug('Existing Resolver found using it');
             return $this->resolver;
@@ -171,7 +174,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @param callable $callback
      */
-    public function getResolverEvent($callback) {
+    public function getResolverEvent($callback)
+    {
         $this->logDebug($this->command . '.resolver called');
         $callback($this->getResolver());
     }
@@ -179,16 +183,17 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @param Query $query
      */
-    public function resolveDnsQuery(Query $query) {
+    public function resolveDnsQuery(Query $query)
+    {
         $that = $this;
         $this->logDebug($this->command . '.resolve called for: ' . $query->getHostname());
-        $this->getResolver()->resolve($query->getHostname())->then(function($ip) use ($that, $query) {
+        $this->getResolver()->resolve($query->getHostname())->then(function ($ip) use ($that, $query) {
             $that->logDebug('IP for hostname ' . $query->getHostname() . ' found: ' . $ip);
             $query->callResolve($ip);
-        }, function($error) use ($that, $query) {
+        }, function ($error) use ($that, $query) {
             $that->logDebug('IP for hostname ' . $query->getHostname() . ' not found: ' . $error->getMessage());
             $query->callReject($error);
         });
     }
-    
+
 }
