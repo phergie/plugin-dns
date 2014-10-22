@@ -6,14 +6,10 @@
 
 ## Install
 
-The recommended method of installation is [through composer](http://getcomposer.org).
+To install via [Composer](http://getcomposer.org/), use the command below, it will automatically detect the latest version and bind it with `~`.
 
-```JSON
-{
-    "require": {
-        "wyrihaximus/phergie-dns": "0.1.0"
-    }
-}
+```
+composer require wyrihaximus/phergie-dns 
 ```
 
 See Phergie documentation for more information on
