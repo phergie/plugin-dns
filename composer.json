@@ -10,16 +10,17 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "react/dns": "0.3.2",
+        "php": ">=5.4.0",
+        "react/dns": "0.4.*",
         "phergie/phergie-irc-bot-react": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.0.*",
-        "phake/phake": "1.0.*",
-        "phergie/phergie-irc-plugin-react-command": "1.0.*"
+        "phpunit/phpunit": "~4.0",
+        "phake/phake": "~1.0",
+        "phergie/phergie-irc-plugin-react-command": "~1.0"
     },
     "suggest": {
-        "phergie/phergie-irc-plugin-react-command": "1.0.*"
+        "phergie/phergie-irc-plugin-react-command": "Required if you want to make use of the command support"
     },
     "autoload": {
         "psr-4": {

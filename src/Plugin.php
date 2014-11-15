@@ -67,7 +67,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @param array $config
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = [])
     {
         if (isset($config['dnsServer'])) {
             $this->dnsServer = $config['dnsServer'];
@@ -97,10 +97,10 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      */
     public function getSubscribedEvents()
     {
-        $events = array(
+        $events = [
             $this->command . '.resolve' => 'resolveDnsQuery',
             $this->command . '.resolver' => 'getResolverEvent',
-        );
+        ];
 
         if ($this->enableCommand) {
             $events['command.' . $this->command] = 'handleDnsCommand';
@@ -130,16 +130,15 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
 
         foreach ($event->getCustomParams() as $hostname) {
             $this->logDebug('Looking up: ' . $hostname);
-            $that = $this;
-            $this->resolveDnsQuery(new Query($hostname, function($ip, $hostname) use ($event, $queue, $that) {
+            $this->resolveDnsQuery(new Query($hostname, function($ip, $hostname) use ($event, $queue) {
                 $message = $hostname . ': ' . $ip;
-                $that->logDebug($message);
+                $this->logDebug($message);
                 foreach ($event->getTargets() as $target) {
                     $queue->ircPrivmsg($target, $message);
                 }
-            }, function($error, $hostname) use ($event, $queue, $that) {
+            }, function($error, $hostname) use ($event, $queue) {
                 $message = $hostname . ': error looking up hostname: ' . $error->getMessage();
-                $that->logDebug($message);
+                $this->logDebug($message);
                 foreach ($event->getTargets() as $target) {
                     $queue->ircPrivmsg($target, $message);
                 }
@@ -180,13 +179,12 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      * @param Query $query
      */
     public function resolveDnsQuery(Query $query) {
-        $that = $this;
         $this->logDebug($this->command . '.resolve called for: ' . $query->getHostname());
-        $this->getResolver()->resolve($query->getHostname())->then(function($ip) use ($that, $query) {
-            $that->logDebug('IP for hostname ' . $query->getHostname() . ' found: ' . $ip);
+        $this->getResolver()->resolve($query->getHostname())->then(function($ip) use ($query) {
+            $this->logDebug('IP for hostname ' . $query->getHostname() . ' found: ' . $ip);
             $query->callResolve($ip);
-        }, function($error) use ($that, $query) {
-            $that->logDebug('IP for hostname ' . $query->getHostname() . ' not found: ' . $error->getMessage());
+        }, function($error) use ($query) {
+            $this->logDebug('IP for hostname ' . $query->getHostname() . ' not found: ' . $error->getMessage());
             $query->callReject($error);
         });
     }

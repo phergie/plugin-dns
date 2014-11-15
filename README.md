@@ -22,7 +22,7 @@ See Phergie documentation for more information on
 ## Configuration
 
 ```php
-new \WyriHaximus\Phergie\Plugin\Dns\Plugin(array(
+new \WyriHaximus\Phergie\Plugin\Dns\Plugin([
 
     // All configuration is optional
 
@@ -41,7 +41,7 @@ new \WyriHaximus\Phergie\Plugin\Dns\Plugin(array(
     // or
 
     'enableCommand' => false,  // enable use access to the dns command
-))
+])
 ```
 
 ## Events
@@ -53,11 +53,11 @@ This plugin listens on a few events providing the resolver to other plugins that
 The `dns.resolve` event accepts a callback that will be called with a `Promise` that will resolve once the given hostname has been resolved. (If promises are new to you, be sure to read [this](https://gist.github.com/domenic/3889970).)
 
 ```php
-$this->emitter->emit('dns.resolve', array(function($promise) use ($that, $callback, $that) {
+$this->emitter->emit('dns.resolve', [function($promise) use ($callback, $that) {
     $promise->then(function($ip) {
         echo 'IP for github.com: ' . $ip . PHP_EOL;
     });
-}));
+}]);
 ```
 
 ### dns.resolver
@@ -65,11 +65,11 @@ $this->emitter->emit('dns.resolve', array(function($promise) use ($that, $callba
 The `dns.resolver` event accepts a callback that will be called once a `Resolver` instance has been created.
 
 ```php
-$this->emitter->emit('dns.resolver', array(function($resolver) use ($that, $callback, $that) {
+$this->emitter->emit('dns.resolver', [function($resolver) use ($callback, $that) {
     $resolver->resolve('github.com')->then(function($ip) {
         echo 'IP for github.com: ' . $ip . PHP_EOL;
     });
-}));
+}]);
 ```
 
 ## Tests

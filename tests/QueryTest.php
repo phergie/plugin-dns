@@ -30,10 +30,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testCallResolve()
     {
         $callbackFired = false;
-        $that = $this;
-        $callback = function($ip, $hostname) use (&$callbackFired, $that) {
-            $that->assertSame('foo:bar', $ip);
-            $that->assertSame('wyrihaximus.net', $hostname);
+        $callback = function($ip, $hostname) use (&$callbackFired) {
+            $this->assertSame('foo:bar', $ip);
+            $this->assertSame('wyrihaximus.net', $hostname);
             $callbackFired = true;
         };
 
@@ -47,10 +46,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testCallReject()
     {
         $callbackFired = false;
-        $that = $this;
-        $callback = function($error, $hostname) use (&$callbackFired, $that) {
-            $that->assertSame('foo:bar', $error);
-            $that->assertSame('wyrihaximus.net', $hostname);
+        $callback = function($error, $hostname) use (&$callbackFired) {
+            $this->assertSame('foo:bar', $error);
+            $this->assertSame('wyrihaximus.net', $hostname);
             $callbackFired = true;
         };
 

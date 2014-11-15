@@ -27,80 +27,80 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin = new Plugin();
         $subscribedEvents = $plugin->getSubscribedEvents();
         $this->assertInternalType('array', $subscribedEvents);
-        $this->assertSame(array(
+        $this->assertSame([
             'dns.resolve' => 'resolveDnsQuery',
             'dns.resolver' => 'getResolverEvent',
-        ), $subscribedEvents);
+        ], $subscribedEvents);
     }
 
     public function testGetSubscribedEventsCustomCommandName()
     {
-        $plugin = new Plugin(array(
+        $plugin = new Plugin([
             'command' => 'dnsCustomName',
             'enableCommand' => true,
-        ));
+        ]);
         $subscribedEvents = $plugin->getSubscribedEvents();
         $this->assertInternalType('array', $subscribedEvents);
-        $this->assertSame(array(
+        $this->assertSame([
             'dnsCustomName.resolve' => 'resolveDnsQuery',
             'dnsCustomName.resolver' => 'getResolverEvent',
             'command.dnsCustomName' => 'handleDnsCommand',
-        ), $subscribedEvents);
+        ], $subscribedEvents);
     }
 
     public function testGetSubscribedEventsEnabledCommand()
     {
-        $plugin = new Plugin(array(
+        $plugin = new Plugin([
             'enableCommand' => true,
-        ));
+        ]);
         $subscribedEvents = $plugin->getSubscribedEvents();
         $this->assertInternalType('array', $subscribedEvents);
-        $this->assertSame(array(
-                'dns.resolve' => 'resolveDnsQuery',
-                'dns.resolver' => 'getResolverEvent',
-                'command.dns' => 'handleDnsCommand',
-            ), $subscribedEvents);
+        $this->assertSame([
+            'dns.resolve' => 'resolveDnsQuery',
+            'dns.resolver' => 'getResolverEvent',
+            'command.dns' => 'handleDnsCommand',
+        ], $subscribedEvents);
     }
 
     public function testHandleDnsCommand()
     {
-        $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
+        $resolver = $this->getMock('React\Dns\Resolver\Resolver', [
             'resolve',
-        ), array(
+        ], [
             '8.8.8.8:53',
             $this->getMock('React\Dns\Query\ExecutorInterface'),
-        ));
+        ]);
         $deferred = new \React\Promise\Deferred();
         $resolver->expects($this->once())
             ->method('resolve')
             ->with('wyrihaximus.net')
             ->willReturn($deferred->promise());
 
-        $plugin = new Plugin(array(
+        $plugin = new Plugin([
             'resolver' => $resolver,
-        ));
+        ]);
 
         $logger = $this->getMock('Psr\Log\LoggerInterface');
         $plugin->setLogger($logger);
 
-        $event = $this->getMock('Phergie\Irc\Plugin\React\Command\CommandEvent', array(
+        $event = $this->getMock('Phergie\Irc\Plugin\React\Command\CommandEvent', [
             'getCustomParams',
             'getTargets',
-        ));
+        ]);
         $event->expects($this->once())
             ->method('getCustomParams')
             ->with()
-            ->willReturn(array(
+            ->willReturn([
                 'wyrihaximus.net',
-            ));
+            ]);
         $event->expects($this->once())
             ->method('getTargets')
             ->with()
-            ->willReturn(array(
+            ->willReturn([
                 'WyriHaximus',
-            ));
+            ]);
 
-        $queue = $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface', array(
+        $queue = $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface', [
             'ircPrivmsg',
             'extract',
             'setPrefix',
@@ -167,7 +167,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             'valid',
             'rewind',
             'count',
-        ));
+        ]);
         $queue->expects($this->once())
             ->method('ircPrivmsg')
             ->with('WyriHaximus', 'wyrihaximus.net: 1.2.3.4');
@@ -188,43 +188,43 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleDnsCommandError()
     {
-        $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
+        $resolver = $this->getMock('React\Dns\Resolver\Resolver', [
             'resolve',
-        ), array(
+        ], [
             '8.8.8.8:53',
             $this->getMock('React\Dns\Query\ExecutorInterface'),
-        ));
+        ]);
         $deferred = new \React\Promise\Deferred();
         $resolver->expects($this->once())
             ->method('resolve')
             ->with('wyrihaximus.net')
             ->willReturn($deferred->promise());
 
-        $plugin = new Plugin(array(
+        $plugin = new Plugin([
             'resolver' => $resolver,
-        ));
+        ]);
 
         $logger = $this->getMock('Psr\Log\LoggerInterface');
         $plugin->setLogger($logger);
 
-        $event = $this->getMock('Phergie\Irc\Plugin\React\Command\CommandEvent', array(
+        $event = $this->getMock('Phergie\Irc\Plugin\React\Command\CommandEvent', [
             'getCustomParams',
             'getTargets',
-        ));
+        ]);
         $event->expects($this->once())
             ->method('getCustomParams')
             ->with()
-            ->willReturn(array(
+            ->willReturn([
                 'wyrihaximus.net',
-            ));
+            ]);
         $event->expects($this->once())
             ->method('getTargets')
             ->with()
-            ->willReturn(array(
+            ->willReturn([
                 'WyriHaximus',
-            ));
+            ]);
 
-        $queue = $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface', array(
+        $queue = $this->getMock('Phergie\Irc\Bot\React\EventQueueInterface', [
             'ircPrivmsg',
             'extract',
             'setPrefix',
@@ -291,7 +291,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             'valid',
             'rewind',
             'count',
-        ));
+        ]);
         $queue->expects($this->once())
             ->method('ircPrivmsg')
             ->with('WyriHaximus', 'wyrihaximus.net: error looking up hostname: Error');
@@ -303,16 +303,16 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testGetResolver()
     {
-        $plugin = new Plugin(array(
+        $plugin = new Plugin([
             'dnsServer' => '4.3.2.1',
-        ));
+        ]);
 
         $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
         $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
 
-        $factory = $this->getMock('React\Dns\Resolver\Factory', array(
+        $factory = $this->getMock('React\Dns\Resolver\Factory', [
             'createCached',
-        ));
+        ]);
         $factory->expects($this->once())
             ->method('createCached')
             ->with('4.3.2.1')
@@ -323,9 +323,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testGetResolverBare()
     {
-        $plugin = new Plugin(array(
+        $plugin = new Plugin([
             'dnsServer' => '4.3.2.1',
-        ));
+        ]);
 
         $plugin->setLoop($this->getMock('React\EventLoop\LoopInterface'));
         $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
@@ -341,9 +341,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
 
         $callbackFired = false;
-        $that = $this;
-        $callback = function($resolver) use (&$callbackFired, $that) {
-            $that->assertInstanceOf('React\Dns\Resolver\Resolver', $resolver);
+        $callback = function($resolver) use (&$callbackFired) {
+            $this->assertInstanceOf('React\Dns\Resolver\Resolver', $resolver);
             $callbackFired = true;
         };
 
@@ -353,28 +352,27 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveDnsQuery()
     {
-        $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
+        $resolver = $this->getMock('React\Dns\Resolver\Resolver', [
             'resolve',
-        ), array(
+        ], [
             '8.8.8.8:53',
             $this->getMock('React\Dns\Query\ExecutorInterface'),
-        ));
+        ]);
         $deferred = new \React\Promise\Deferred();
         $resolver->expects($this->once())
             ->method('resolve')
             ->with('wyrihaximus.net')
             ->willReturn($deferred->promise());
 
-        $plugin = new Plugin(array(
+        $plugin = new Plugin([
             'resolver' => $resolver,
-        ));
+        ]);
 
         $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
 
         $callbackFired = false;
-        $that = $this;
-        $callback = function($ip) use (&$callbackFired, $that) {
-            $that->assertSame('1.2.3.4', $ip);
+        $callback = function($ip) use (&$callbackFired) {
+            $this->assertSame('1.2.3.4', $ip);
             $callbackFired = true;
         };
 
@@ -385,28 +383,27 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testRejectDnsQuery()
     {
-        $resolver = $this->getMock('React\Dns\Resolver\Resolver', array(
+        $resolver = $this->getMock('React\Dns\Resolver\Resolver', [
             'resolve',
-        ), array(
+        ], [
             '8.8.8.8:53',
             $this->getMock('React\Dns\Query\ExecutorInterface'),
-        ));
+        ]);
         $deferred = new \React\Promise\Deferred();
         $resolver->expects($this->once())
             ->method('resolve')
             ->with('wyrihaximus.net')
             ->willReturn($deferred->promise());
 
-        $plugin = new Plugin(array(
+        $plugin = new Plugin([
             'resolver' => $resolver,
-        ));
+        ]);
 
         $plugin->setLogger($this->getMock('Psr\Log\LoggerInterface'));
 
         $callbackFired = false;
-        $that = $this;
-        $callback = function($error) use (&$callbackFired, $that) {
-            $that->isInstanceOf('Exception', $error);
+        $callback = function($error) use (&$callbackFired) {
+            $this->isInstanceOf('Exception', $error);
             $callbackFired = true;
         };
 
