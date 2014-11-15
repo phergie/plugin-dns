@@ -86,7 +86,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @param LoopInterface $loop
      */
-    public function setLoop(LoopInterface $loop) {
+    public function setLoop(LoopInterface $loop)
+    {
         $this->loop = $loop;
     }
 
@@ -112,7 +113,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @param string $message
      */
-    public function logDebug($message) {
+    public function logDebug($message)
+    {
         $this->logger->debug('[Dns]' . $message);
     }
 
@@ -151,7 +153,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return Resolver
      */
-    public function getResolver(Factory $factory = null) {
+    public function getResolver(Factory $factory = null)
+    {
         if ($this->resolver instanceof Resolver) {
             $this->logDebug('Existing Resolver found using it');
             return $this->resolver;
@@ -170,7 +173,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @param callable $callback
      */
-    public function getResolverEvent($callback) {
+    public function getResolverEvent($callback)
+    {
         $this->logDebug($this->command . '.resolver called');
         $callback($this->getResolver());
     }
@@ -188,5 +192,5 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
             $query->callReject($error);
         });
     }
-    
+
 }
