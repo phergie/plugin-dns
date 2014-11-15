@@ -22,7 +22,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetHostname()
     {
-        $query = new Query('wyrihaximus.net', function() {}, function() {});
+        $query = new Query(
+            'wyrihaximus.net',
+            function () {
+            },
+            function () {
+            }
+        );
 
         $this->assertSame('wyrihaximus.net', $query->getHostname());
     }
@@ -30,13 +36,18 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testCallResolve()
     {
         $callbackFired = false;
-        $callback = function($ip, $hostname) use (&$callbackFired) {
+        $callback = function ($ip, $hostname) use (&$callbackFired) {
             $this->assertSame('foo:bar', $ip);
             $this->assertSame('wyrihaximus.net', $hostname);
             $callbackFired = true;
         };
 
-        $query = new Query('wyrihaximus.net', $callback, function() {});
+        $query = new Query(
+            'wyrihaximus.net',
+            $callback,
+            function () {
+            }
+        );
 
         $query->callResolve('foo:bar');
 
@@ -46,13 +57,18 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testCallReject()
     {
         $callbackFired = false;
-        $callback = function($error, $hostname) use (&$callbackFired) {
+        $callback = function ($error, $hostname) use (&$callbackFired) {
             $this->assertSame('foo:bar', $error);
             $this->assertSame('wyrihaximus.net', $hostname);
             $callbackFired = true;
         };
 
-        $query = new Query('wyrihaximus.net', function() {}, $callback);
+        $query = new Query(
+            'wyrihaximus.net',
+            function () {
+            },
+            $callback
+        );
 
         $query->callReject('foo:bar');
 

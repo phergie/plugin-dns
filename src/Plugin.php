@@ -126,25 +126,35 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      */
     public function handleDnsCommand(CommandEventInterface $event, EventQueueInterface $queue)
     {
-        if (get_class($event) !== '\Phergie\Irc\Plugin\React\Command\CommandEvent' && !is_subclass_of($event, '\Phergie\Irc\Plugin\React\Command\CommandEvent')) {
-            throw new \BadMethodCallException(get_class($event) . ' given, expected: Phergie\Irc\Plugin\React\Command\CommandEvent');
+        if (get_class($event) !== '\Phergie\Irc\Plugin\React\Command\CommandEvent' &&
+            !is_subclass_of($event, '\Phergie\Irc\Plugin\React\Command\CommandEvent')
+        ) {
+            throw new \BadMethodCallException(
+                get_class($event) . ' given, expected: Phergie\Irc\Plugin\React\Command\CommandEvent'
+            );
         }
 
         foreach ($event->getCustomParams() as $hostname) {
             $this->logDebug('Looking up: ' . $hostname);
-            $this->resolveDnsQuery(new Query($hostname, function($ip, $hostname) use ($event, $queue) {
-                $message = $hostname . ': ' . $ip;
-                $this->logDebug($message);
-                foreach ($event->getTargets() as $target) {
-                    $queue->ircPrivmsg($target, $message);
-                }
-            }, function($error, $hostname) use ($event, $queue) {
-                $message = $hostname . ': error looking up hostname: ' . $error->getMessage();
-                $this->logDebug($message);
-                foreach ($event->getTargets() as $target) {
-                    $queue->ircPrivmsg($target, $message);
-                }
-            }));
+            $this->resolveDnsQuery(
+                new Query(
+                    $hostname,
+                    function ($ip, $hostname) use ($event, $queue) {
+                        $message = $hostname . ': ' . $ip;
+                        $this->logDebug($message);
+                        foreach ($event->getTargets() as $target) {
+                            $queue->ircPrivmsg($target, $message);
+                        }
+                    },
+                    function ($error, $hostname) use ($event, $queue) {
+                        $message = $hostname . ': error looking up hostname: ' . $error->getMessage();
+                        $this->logDebug($message);
+                        foreach ($event->getTargets() as $target) {
+                            $queue->ircPrivmsg($target, $message);
+                        }
+                    }
+                )
+            );
         }
     }
 
@@ -182,15 +192,18 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @param Query $query
      */
-    public function resolveDnsQuery(Query $query) {
+    public function resolveDnsQuery(Query $query)
+    {
         $this->logDebug($this->command . '.resolve called for: ' . $query->getHostname());
-        $this->getResolver()->resolve($query->getHostname())->then(function($ip) use ($query) {
-            $this->logDebug('IP for hostname ' . $query->getHostname() . ' found: ' . $ip);
-            $query->callResolve($ip);
-        }, function($error) use ($query) {
-            $this->logDebug('IP for hostname ' . $query->getHostname() . ' not found: ' . $error->getMessage());
-            $query->callReject($error);
-        });
+        $this->getResolver()->resolve($query->getHostname())->then(
+            function ($ip) use ($query) {
+                $this->logDebug('IP for hostname ' . $query->getHostname() . ' found: ' . $ip);
+                $query->callResolve($ip);
+            },
+            function ($error) use ($query) {
+                $this->logDebug('IP for hostname ' . $query->getHostname() . ' not found: ' . $error->getMessage());
+                $query->callReject($error);
+            }
+        );
     }
-
 }
