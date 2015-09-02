@@ -195,6 +195,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
                 'valid',
                 'rewind',
                 'count',
+                'ircProtoctl',
+                'getIterator',
             ]
         );
         $queue->expects($this->once())
@@ -338,6 +340,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
                 'valid',
                 'rewind',
                 'count',
+                'ircProtoctl',
+                'getIterator',
             ]
         );
         $queue->expects($this->once())
