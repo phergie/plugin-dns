@@ -8,13 +8,13 @@
  * file that was distributed with this source code.
  */
 
-namespace WyriHaximus\Phergie\Plugin\Dns;
+namespace Phergie\Plugin\Dns;
 
 /**
  * Plugin for Looking up IP's by hostnames.
  *
  * @category Phergie
- * @package WyriHaximus\Phergie\Plugin\Dns
+ * @package Phergie\Plugin\Dns
  */
 class Query
 {

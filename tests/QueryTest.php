@@ -10,13 +10,13 @@
 
 namespace WyriHaximus\Phergie\Tests\Plugin\Dns;
 
-use WyriHaximus\Phergie\Plugin\Dns\Query;
+use Phergie\Plugin\Dns\Query;
 
 /**
  * Tests for the Query class.
  *
  * @category Phergie
- * @package WyriHaximus\Phergie\Plugin\Dns
+ * @package Phergie\Plugin\Dns
  */
 class QueryTest extends \PHPUnit_Framework_TestCase
 {

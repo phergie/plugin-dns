@@ -2,14 +2,14 @@
 
 [Phergie](http://github.com/phergie/phergie-irc-bot-react/) plugin for Looking up IP&#039;s by hostnames.
 
-[![Build Status](https://secure.travis-ci.org/WyriHaximus/PhergieDns.png?branch=master)](http://travis-ci.org/WyriHaximus/PhergieDns)
+[![Build Status](https://secure.travis-ci.org/phergie/phergie/phergie-irc-plugin-dns.png?branch=master)](http://travis-ci.org/phergie/phergie-irc-plugin-dns)
 
 ## Install
 
 To install via [Composer](http://getcomposer.org/), use the command below, it will automatically detect the latest version and bind it with `~`.
 
 ```
-composer require wyrihaximus/phergie-dns 
+composer require phergie/phergie-irc-plugin-dns 
 ```
 
 See Phergie documentation for more information on
@@ -18,7 +18,7 @@ See Phergie documentation for more information on
 ## Configuration
 
 ```php
-new \WyriHaximus\Phergie\Plugin\Dns\Plugin([
+new \Phergie\Plugin\Dns\Plugin([
 
     // All configuration is optional
 

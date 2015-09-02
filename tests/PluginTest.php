@@ -8,16 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace WyriHaximus\Phergie\Tests\Plugin\Dns;
+namespace Phergie\Tests\Plugin\Dns;
 
-use WyriHaximus\Phergie\Plugin\Dns\Plugin;
-use WyriHaximus\Phergie\Plugin\Dns\Query;
+use Phergie\Plugin\Dns\Plugin;
+use Phergie\Plugin\Dns\Query;
 
 /**
  * Tests for the Plugin class.
  *
  * @category Phergie
- * @package WyriHaximus\Phergie\Plugin\Dns
+ * @package Phergie\Plugin\Dns
  */
 class PluginTest extends \PHPUnit_Framework_TestCase
 {

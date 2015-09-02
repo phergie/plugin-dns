@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace WyriHaximus\Phergie\Plugin\Dns;
+namespace Phergie\Plugin\Dns;
 
 use Phergie\Irc\Bot\React\AbstractPlugin;
 use Phergie\Irc\Bot\React\EventQueueInterface;
@@ -22,7 +22,7 @@ use React\EventLoop\LoopInterface;
  * Plugin for Looking up IP's by hostnames.
  *
  * @category Phergie
- * @package WyriHaximus\Phergie\Plugin\Dns
+ * @package Phergie\Plugin\Dns
  */
 class Plugin extends AbstractPlugin implements LoopAwareInterface
 {

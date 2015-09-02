@@ -28,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "WyriHaximus\\Phergie\\Plugin\\Dns\\": "src"
+            "Phergie\\Plugin\\Dns\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "WyriHaximus\\Phergie\\Tests\\Plugin\\Dns\\": "tests"
+            "Phergie\\Tests\\Plugin\\Dns\\": "tests"
         }
     }
 }
