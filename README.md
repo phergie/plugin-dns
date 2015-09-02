@@ -1,4 +1,4 @@
-# WyriHaximus/PhergieDns
+# DNS Plugin
 
 [Phergie](http://github.com/phergie/phergie-irc-bot-react/) plugin for Looking up IP&#039;s by hostnames.
 
