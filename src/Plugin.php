@@ -127,6 +127,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     public function handleDnsCommand(CommandEventInterface $event, EventQueueInterface $queue)
     {
         if (get_class($event) !== '\Phergie\Irc\Plugin\React\Command\CommandEvent' &&
+            get_class($event) !== 'Phergie\Irc\Plugin\React\Command\CommandEvent' &&
             !is_subclass_of($event, '\Phergie\Irc\Plugin\React\Command\CommandEvent')
         ) {
             throw new \BadMethodCallException(
