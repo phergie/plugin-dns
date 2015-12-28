@@ -13,13 +13,13 @@
         "irc": "irc://irc.freenode.net/phergie"
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5",
         "react/dns": "^0.4.1",
-        "phergie/phergie-irc-bot-react": "^1.0"
+        "phergie/phergie-irc-bot-react": "^2.0"
     },
     "require-dev": {
         "phergie/phergie-irc-bot-react-development": "^1.0.2|^1.1",
-        "phergie/phergie-irc-plugin-react-command": "^1.1"
+        "phergie/phergie-irc-plugin-react-command": "^2"
     },
     "suggest": {
         "phergie/phergie-irc-plugin-react-command": "Required if you want to make use of the command support"
