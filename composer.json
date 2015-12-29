@@ -18,7 +18,7 @@
         "phergie/phergie-irc-bot-react": "^2.0"
     },
     "require-dev": {
-        "phergie/phergie-irc-bot-react-development": "^1.0.2|^1.1",
+        "phergie/phergie-irc-bot-react-development": "^1.0.2",
         "phergie/phergie-irc-plugin-react-command": "^2"
     },
     "suggest": {
