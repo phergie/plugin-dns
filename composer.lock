@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "75033280b544dceb5943863a19a8eebd",
-    "content-hash": "eb9d180ee33918a79b2d9c43de3161da",
+    "hash": "6767ce3c2b1d7acd9d89223e730f12bb",
+    "content-hash": "a39291316879dbe0e3553db922c11c02",
     "packages": [
         {
             "name": "evenement/evenement",
@@ -923,6 +923,7 @@
                 "rest",
                 "web service"
             ],
+            "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18 18:23:50"
         },
         {
@@ -2059,12 +2060,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "17d4b2e64ce1c6ba7caa040f14469b3c44d7f7d2"
+                "reference": "a5d5d25c994ed8e55668b2562cb0c0320469f1f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/17d4b2e64ce1c6ba7caa040f14469b3c44d7f7d2",
-                "reference": "17d4b2e64ce1c6ba7caa040f14469b3c44d7f7d2",
+                "url": "https://api.github.com/repos/symfony/config/zipball/a5d5d25c994ed8e55668b2562cb0c0320469f1f4",
+                "reference": "a5d5d25c994ed8e55668b2562cb0c0320469f1f4",
                 "shasum": ""
             },
             "require": {
@@ -2489,7 +2490,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5"
+        "php": ">=5.6.0"
     },
     "platform-dev": []
 }
